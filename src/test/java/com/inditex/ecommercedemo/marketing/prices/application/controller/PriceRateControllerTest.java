@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,7 +42,7 @@ public class PriceRateControllerTest {
     private PriceRateSearcher priceRateSearcher;
 
     @Test
-    public void test_is_ok_response_when_required_request_params_are_informed() throws Exception {
+    public void test_is_ok_response_when_required_parameters_are_informed() throws Exception {
         // Prepare data mocked from database
         Price price = PriceObjectMother.dummy();
         when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenReturn(price);
@@ -53,13 +54,29 @@ public class PriceRateControllerTest {
                       .accept(MediaType.APPLICATION_JSON))
               .andDo(print())
               .andExpect(status().isOk())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.rateId").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.productId").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.brandId").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.startDate").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.endDate").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.value").exists())
-              .andExpect(MockMvcResultMatchers.jsonPath("$.currency").exists());
+              .andExpect(MockMvcResultMatchers.jsonPath("$.rateId").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.productId").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.brandId").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.startDate").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.endDate").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.value").isNotEmpty())
+              .andExpect(MockMvcResultMatchers.jsonPath("$.currency").isNotEmpty());
+    }
+
+    @Test
+    public void test_is_bad_response_when_required_parameters_are_avoid() throws Exception {
+        // Call method under test
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/prices/rates")
+                        .params(PriceQueryParamsMother.incompleteWithoutBrandId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.path").isNotEmpty());
     }
  
 }

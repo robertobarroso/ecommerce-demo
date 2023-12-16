@@ -10,4 +10,11 @@ public class PriceQueryParamsMother {
         queryParams.add("brandId", "1");
         return queryParams;
     }
+
+    public static LinkedMultiValueMap<String, String> incompleteWithoutBrandId() {
+        LinkedMultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("date", "2020-06-14T16:00:00");
+        queryParams.add("productId", "35455");
+        return queryParams;
+    }
 }
