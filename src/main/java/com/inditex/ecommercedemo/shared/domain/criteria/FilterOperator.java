@@ -4,7 +4,9 @@ public enum FilterOperator {
     EQUAL("="),
     NOT_EQUAL("!="),
     GT(">"),
+    GTE(">="),
     LT("<"),
+    LTE("<="),
     CONTAINS("CONTAINS"),
     NOT_CONTAINS("NOT_CONTAINS");
 

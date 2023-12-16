@@ -19,13 +19,15 @@ public final class CriteriaConverter<T> {
         put(FilterOperator.EQUAL, CriteriaConverter.this::equalsPredicateTransformer);
         put(FilterOperator.NOT_EQUAL, CriteriaConverter.this::notEqualsPredicateTransformer);
         put(FilterOperator.GT, CriteriaConverter.this::greaterThanPredicateTransformer);
-        put(FilterOperator.LT, CriteriaConverter.this::lowerThanPredicateTransformer);
+        put(FilterOperator.GTE, CriteriaConverter.this::greaterThanOrEqualToPredicateTransformer);
+        put(FilterOperator.LT, CriteriaConverter.this::lessThanPredicateTransformer);
+        put(FilterOperator.LTE, CriteriaConverter.this::lessThanOrEqualToPredicateTransformer);
         put(FilterOperator.CONTAINS, CriteriaConverter.this::containsPredicateTransformer);
         put(FilterOperator.NOT_CONTAINS, CriteriaConverter.this::notContainsPredicateTransformer);
     }};
     
     private final HashMap<String, String> databaseFieldMap = new HashMap<String, String>() {{
-        put("brandId", "brandId"); // or put("brandId", _PriceEntity.BRAND_ID)
+        put("brandId", "brandId");
         put("productId", "productId");
 	}};
 
@@ -72,26 +74,40 @@ public final class CriteriaConverter<T> {
     }
 
     private Predicate equalsPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.equal(root.get(databaseFieldMap.get(filter.field().value())), filter.value().value());
+        return builder.equal(root.get(databaseFieldMap.get(filter.field().value())), filter.value());
     }
 
     private Predicate notEqualsPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.notEqual(root.get(databaseFieldMap.get(filter.field().value())), filter.value().value());
+        return builder.notEqual(root.get(databaseFieldMap.get(filter.field().value())), filter.value());
     }
 
     private Predicate greaterThanPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.greaterThan(root.get(databaseFieldMap.get(filter.field().value())), filter.value().value());
+        return builder.greaterThan(root.get(databaseFieldMap.get(filter.field().value())),
+                filter.value() != null ? filter.value().toString(): null);
     }
 
-    private Predicate lowerThanPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.lessThan(root.get(databaseFieldMap.get(filter.field().value())), filter.value().value());
+    private Predicate greaterThanOrEqualToPredicateTransformer(Filter filter, Root<T> root) {
+        return builder.greaterThanOrEqualTo(root.get(databaseFieldMap.get(filter.field().value())),
+                filter.value() != null ? filter.value().toString(): null);
+    }
+
+    private Predicate lessThanPredicateTransformer(Filter filter, Root<T> root) {
+        return builder.lessThan(root.get(databaseFieldMap.get(filter.field().value())),
+                filter.value() != null ? filter.value().toString(): null);
+    }
+
+    private Predicate lessThanOrEqualToPredicateTransformer(Filter filter, Root<T> root) {
+        return builder.lessThanOrEqualTo(root.get(databaseFieldMap.get(filter.field().value())),
+                filter.value() != null ? filter.value().toString(): null);
     }
 
     private Predicate containsPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.like(root.get(databaseFieldMap.get(filter.field().value())), String.format("%%%s%%", filter.value().value()));
+        return builder.like(root.get(databaseFieldMap.get(filter.field().value())),
+                String.format("%%%s%%", filter.value()));
     }
 
     private Predicate notContainsPredicateTransformer(Filter filter, Root<T> root) {
-        return builder.notLike(root.get(databaseFieldMap.get(filter.field().value())), String.format("%%%s%%", filter.value().value()));
+        return builder.notLike(root.get(databaseFieldMap.get(filter.field().value())),
+                String.format("%%%s%%", filter.value()));
     }
 }

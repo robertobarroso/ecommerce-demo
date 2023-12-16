@@ -3,26 +3,26 @@ package com.inditex.ecommercedemo.shared.domain.criteria;
 import java.util.Optional;
 
 public final class Criteria {
-    private final Filters           filters;
+    private final FilterWrapper filters;
     private final Order             order;
     private final Optional<Integer> limit;
     private final Optional<Integer> offset;
 
-    public Criteria(Filters filters, Order order, Optional<Integer> limit, Optional<Integer> offset) {
+    public Criteria(FilterWrapper filters, Order order, Optional<Integer> limit, Optional<Integer> offset) {
         this.filters = filters;
         this.order   = order;
         this.limit   = limit;
         this.offset  = offset;
     }
 
-    public Criteria(Filters filters, Order order) {
+    public Criteria(FilterWrapper filters, Order order) {
         this.filters = filters;
         this.order   = order;
         this.limit   = Optional.empty();
         this.offset  = Optional.empty();
     }
 
-    public Filters filters() {
+    public FilterWrapper filters() {
         return filters;
     }
 

@@ -5,19 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class Filters {
+public final class FilterWrapper {
     private final List<Filter> filters;
 
-    public Filters(List<Filter> filters) {
+    public FilterWrapper(List<Filter> filters) {
         this.filters = filters;
     }
 
-    public static Filters fromValues(List<HashMap<String, String>> filters) {
-        return new Filters(filters.stream().map(Filter::fromValues).collect(Collectors.toList()));
+    public static FilterWrapper create(List<HashMap<String, String>> filters) {
+        return new FilterWrapper(filters.stream().map(Filter::create).collect(Collectors.toList()));
     }
 
-    public static Filters none() {
-        return new Filters(Collections.emptyList());
+    public static FilterWrapper none() {
+        return new FilterWrapper(Collections.emptyList());
     }
 
     public List<Filter> filters() {
