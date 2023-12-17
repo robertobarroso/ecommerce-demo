@@ -12,14 +12,12 @@ import com.inditex.ecommercedemo.shared.domain.criteria.Criteria;
 import com.inditex.ecommercedemo.shared.domain.exception.BusinessErrorCode;
 import com.inditex.ecommercedemo.shared.domain.exception.BusinessException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@ExtendWith(SpringExtension.class)
+
 @WebMvcTest(PriceRateController.class)
 @Import({PriceCriteriaDtoMapperImpl.class, PriceDtoMapperImpl.class})
 public class PriceRateControllerTest {
@@ -45,7 +43,7 @@ public class PriceRateControllerTest {
     private PriceRateSearcher priceRateSearcher;
 
     @Test
-    public void test_is_ok_response_when_required_parameters_are_informed() throws Exception {
+    public void testIsOkResponse_whenRequiredParametersAreInformed() throws Exception {
         // Prepare data mocked from database
         Price price = PriceObjectMother.dummy();
         when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenReturn(price);
@@ -67,7 +65,7 @@ public class PriceRateControllerTest {
     }
 
     @Test
-    public void test_is_bad_response_when_required_parameters_are_avoid() throws Exception {
+    public void testIsBadResponse_whenRequiredParametersAreAvoid() throws Exception {
         // Call method under test
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/prices/rates")
@@ -82,7 +80,7 @@ public class PriceRateControllerTest {
     }
 
     @Test
-    public void test_is_bad_response_when_business_exception_is_thrown() throws Exception {
+    public void testIsBadResponse_whenBusinessExceptionIsThrown() throws Exception {
         // When search method is called, simulate an error throwing BusinessException
         when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenThrow(new BusinessException(BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getMessage()));
 

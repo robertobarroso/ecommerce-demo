@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class PriceAdapter implements PricePort {
 
     @Override
-    public Price findByCriteriaMaxPriority(Criteria criteria) {
+    public Price searchByCriteria(Criteria criteria) {
         return null;
     }
 }
