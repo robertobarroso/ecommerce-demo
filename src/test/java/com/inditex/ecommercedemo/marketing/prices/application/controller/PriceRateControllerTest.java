@@ -83,6 +83,7 @@ public class PriceRateControllerTest {
 
     @Test
     public void test_is_bad_response_when_business_exception_is_thrown() throws Exception {
+        // When search method is called, simulate an error throwing BusinessException
         when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenThrow(new BusinessException(BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getMessage()));
 
         // Call method under test
@@ -94,8 +95,7 @@ public class PriceRateControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(BusinessErrorCode.BE0002.getCode()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details ").isNotEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty());
     }
  
 }

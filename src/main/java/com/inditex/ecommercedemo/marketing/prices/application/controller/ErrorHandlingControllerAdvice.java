@@ -2,7 +2,9 @@ package com.inditex.ecommercedemo.marketing.prices.application.controller;
 
 import com.inditex.ecommercedemo.marketing.prices.application.dto.ErrorDto;
 import com.inditex.ecommercedemo.shared.domain.exception.BusinessErrorCode;
+import com.inditex.ecommercedemo.shared.domain.exception.BusinessException;
 import com.inditex.ecommercedemo.shared.domain.exception.SystemErrorCode;
+import com.inditex.ecommercedemo.shared.domain.exception.SystemException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-class GlobalErrorHandler extends ResponseEntityExceptionHandler {
+public class ErrorHandlingControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -43,13 +45,23 @@ class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getMessage(), errorFieldsMap, e.getCause());
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> onAnyElseException(BusinessException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getCode(), e.getMessage(), null, null);
+    }
+
+    @ExceptionHandler(SystemException.class)
+    public ResponseEntity<Object> onAnyElseException(SystemException e) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getCode(), e.getMessage(), null, e.getCause());
+    }
+
     // Format responses of any unhandled exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> onAnyElseException(Exception e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, SystemErrorCode.SE0001.getCode(), SystemErrorCode.SE0001.getMessage(), null, e.getCause());
     }
 
-    // Format responses of any exception thrown by Spring and not managed in this Handler
+    // Format responses of any exception thrown by Spring and not managed in this ExceptionHandler class
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         Map<String, String> errorFieldsMap = new HashMap<>();
