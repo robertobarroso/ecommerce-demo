@@ -9,14 +9,16 @@ import com.inditex.ecommercedemo.marketing.prices.application.mapper.PriceDtoMap
 import com.inditex.ecommercedemo.marketing.prices.application.usecase.find_rate.PriceRateSearcher;
 import com.inditex.ecommercedemo.marketing.prices.domain.entity.Price;
 import com.inditex.ecommercedemo.shared.domain.criteria.Criteria;
+import com.inditex.ecommercedemo.shared.domain.exception.BusinessErrorCode;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -24,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(PriceRateController.class)
 @Import({PriceCriteriaDtoMapperImpl.class, PriceDtoMapperImpl.class})
 public class PriceRateControllerTest {
@@ -73,10 +75,9 @@ public class PriceRateControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(BusinessErrorCode.BE0001.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.path").isNotEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details ").isNotEmpty());
     }
  
 }

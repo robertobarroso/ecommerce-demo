@@ -1,11 +1,11 @@
 package com.inditex.ecommercedemo.marketing.prices.domain.entity;
 
-import com.inditex.ecommercedemo.marketing.shared.domain.BrandId;
-import com.inditex.ecommercedemo.marketing.shared.domain.PriceId;
-import com.inditex.ecommercedemo.marketing.shared.domain.PriceRateId;
-import com.inditex.ecommercedemo.marketing.shared.domain.ProductId;
+import com.inditex.ecommercedemo.marketing.shared.domain.entity.BrandId;
+import com.inditex.ecommercedemo.marketing.shared.domain.entity.PriceId;
+import com.inditex.ecommercedemo.marketing.shared.domain.entity.PriceRateId;
+import com.inditex.ecommercedemo.marketing.shared.domain.entity.ProductId;
 import com.inditex.ecommercedemo.shared.domain.AggregateRoot;
-import com.inditex.ecommercedemo.shared.domain.price.PriceCreatedDomainEvent;
+import com.inditex.ecommercedemo.marketing.shared.domain.event.PriceCreatedDomainEvent;
 import lombok.Builder;
 
 import java.math.BigDecimal;

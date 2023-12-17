@@ -5,7 +5,7 @@ import com.inditex.ecommercedemo.marketing.prices.domain.entity.Price;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PriceDtoMapper {
     @Mapping(expression="java(price.getId().value())", target="id")
     @Mapping(expression="java(price.getBrandId().value())", target="brandId")

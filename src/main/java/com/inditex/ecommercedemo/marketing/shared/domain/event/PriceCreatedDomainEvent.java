@@ -1,4 +1,4 @@
-package com.inditex.ecommercedemo.shared.domain.price;
+package com.inditex.ecommercedemo.marketing.shared.domain.event;
 
 import com.inditex.ecommercedemo.shared.domain.event.DomainEvent;
 

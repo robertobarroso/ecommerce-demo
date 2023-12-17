@@ -4,17 +4,16 @@ import com.inditex.ecommercedemo.shared.domain.criteria.Criteria;
 import com.inditex.ecommercedemo.shared.domain.criteria.Filter;
 import com.inditex.ecommercedemo.shared.domain.criteria.FilterOperator;
 import jakarta.persistence.criteria.*;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-@Service
 public final class CriteriaConverter<T> {
-    private final CriteriaBuilder                                                 builder;
+
+    private final CriteriaBuilder builder;
+
     private final HashMap<FilterOperator, BiFunction<Filter, Root<T>, Predicate>> predicateTransformers = new HashMap<FilterOperator, BiFunction<Filter, Root<T>, Predicate>>() {{
         put(FilterOperator.EQUAL, CriteriaConverter.this::equalsPredicateTransformer);
         put(FilterOperator.NOT_EQUAL, CriteriaConverter.this::notEqualsPredicateTransformer);
@@ -35,31 +34,25 @@ public final class CriteriaConverter<T> {
         this.builder = builder;
     }
 
-    public Specification<T> convert(Criteria criteria) {
-    	return new Specification<T>() {
-			private static final long serialVersionUID = 1L;
+    public CriteriaQuery<T> convert(Criteria criteria, Class<T> aggregateClass) {
+        CriteriaQuery<T> hibernateCriteria = builder.createQuery(aggregateClass);
+        Root<T> root = hibernateCriteria.from(aggregateClass);
 
-			@Override
-			public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-				cq.where(formatPredicates(criteria.filters().filters(), root));
+        hibernateCriteria.where(formatPredicates(criteria.filters().filters(), root));
 
-		        if (criteria.order().hasOrder()) {
-		            Path<Object> orderBy = root.get(criteria.order().orderBy().value());
-		            Order        order   = criteria.order().orderType().isAsc() ? builder.asc(orderBy) : builder.desc(orderBy);
+        if (criteria.order().hasOrder()) {
+            Path<Object> orderBy = root.get(criteria.order().orderBy().value());
+            Order order = criteria.order().orderType().isAsc() ? builder.asc(orderBy) : builder.desc(orderBy);
 
-		            cq.orderBy(order);
-		        }
+            hibernateCriteria.orderBy(order);
+        }
 
-		        return cq.getRestriction();
-			}
-		};
+        return hibernateCriteria;
     }
 
     private Predicate[] formatPredicates(List<Filter> filters, Root<T> root) {
-        List<Predicate> predicates = filters.stream().map(filter -> formatPredicate(
-            filter,
-            root
-        )).collect(Collectors.toList());
+        List<Predicate> predicates = filters.stream().map(filter -> formatPredicate(filter, root))
+                .collect(Collectors.toList());
 
         Predicate[] predicatesArray = new Predicate[predicates.size()];
         predicatesArray = predicates.toArray(predicatesArray);
@@ -69,7 +62,6 @@ public final class CriteriaConverter<T> {
 
     private Predicate formatPredicate(Filter filter, Root<T> root) {
         BiFunction<Filter, Root<T>, Predicate> transformer = predicateTransformers.get(filter.operator());
-
         return transformer.apply(filter, root);
     }
 
