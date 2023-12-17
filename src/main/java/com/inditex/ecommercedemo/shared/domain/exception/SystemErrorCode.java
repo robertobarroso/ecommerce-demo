@@ -6,12 +6,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SystemErrorCode {
     SE0001("SE0001", "Unexpected error"),
-    SE0002("SE0002", "Database error");
+    SE0002("SE0002", "Database error trying to access {0}");
 
     @Getter
     private String code;
 
     @Getter
-    private String description;
+    private String message;
 
 }

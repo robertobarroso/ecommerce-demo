@@ -10,6 +10,7 @@ import com.inditex.ecommercedemo.marketing.prices.application.usecase.find_rate.
 import com.inditex.ecommercedemo.marketing.prices.domain.entity.Price;
 import com.inditex.ecommercedemo.shared.domain.criteria.Criteria;
 import com.inditex.ecommercedemo.shared.domain.exception.BusinessErrorCode;
+import com.inditex.ecommercedemo.shared.domain.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -76,6 +77,23 @@ public class PriceRateControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(BusinessErrorCode.BE0001.getCode()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details ").isNotEmpty());
+    }
+
+    @Test
+    public void test_is_bad_response_when_business_exception_is_thrown() throws Exception {
+        when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenThrow(new BusinessException(BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getMessage()));
+
+        // Call method under test
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/prices/rates")
+                        .params(PriceQueryParamsMother.dummy())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(BusinessErrorCode.BE0002.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.details ").isNotEmpty());
     }

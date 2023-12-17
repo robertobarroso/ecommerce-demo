@@ -27,26 +27,26 @@ class GlobalErrorHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errorFieldsMap = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0001.getCode(), BusinessErrorCode.BE0001.getDescription(), errorFieldsMap, ex.getCause());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0001.getCode(), BusinessErrorCode.BE0001.getMessage(), errorFieldsMap, ex.getCause());
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errorFieldsMap = new HashMap<>();
         errorFieldsMap.put("variableName", ex.getVariableName());
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0003.getCode(), BusinessErrorCode.BE0003.getDescription(), errorFieldsMap, ex.getCause());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0003.getCode(), BusinessErrorCode.BE0003.getMessage(), errorFieldsMap, ex.getCause());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> onConstraintValidationException(ConstraintViolationException e) {
         Map<String, String> errorFieldsMap  = e.getConstraintViolations().stream().collect(Collectors.toMap(key -> key.getPropertyPath().toString(), value -> value.getMessage()));
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getDescription(), errorFieldsMap, e.getCause());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, BusinessErrorCode.BE0002.getCode(), BusinessErrorCode.BE0002.getMessage(), errorFieldsMap, e.getCause());
     }
 
     // Format responses of any unhandled exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> onAnyElseException(Exception e) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, SystemErrorCode.SE0001.getCode(), SystemErrorCode.SE0001.getDescription(), null, e.getCause());
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, SystemErrorCode.SE0001.getCode(), SystemErrorCode.SE0001.getMessage(), null, e.getCause());
     }
 
     // Format responses of any exception thrown by Spring and not managed in this Handler
@@ -54,7 +54,7 @@ class GlobalErrorHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         Map<String, String> errorFieldsMap = new HashMap<>();
         errorFieldsMap.put("exceptionMessage", ex.getMessage());
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, SystemErrorCode.SE0001.getCode(), SystemErrorCode.SE0001.getDescription(), errorFieldsMap, ex.getCause());
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, SystemErrorCode.SE0001.getCode(), SystemErrorCode.SE0001.getMessage(), errorFieldsMap, ex.getCause());
     }
 
     private ResponseEntity<Object> buildErrorResponse(HttpStatus httpStatus, String code, String description, Map<String, String> details, Throwable cause) {

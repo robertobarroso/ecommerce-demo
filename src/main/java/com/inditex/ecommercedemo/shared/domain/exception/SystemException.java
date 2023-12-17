@@ -1,13 +1,14 @@
 package com.inditex.ecommercedemo.shared.domain.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
 public class SystemException extends RuntimeException {
 
-    private SystemErrorCode code;
+    @Getter
+    private String code;
 
-    private String description;
+    public SystemException(String code, String message, Throwable cause) {
+        super(message, cause);
+        this.code = code;
+    }
 }

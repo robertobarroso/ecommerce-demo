@@ -13,6 +13,6 @@ public enum BusinessErrorCode {
     private String code;
 
     @Getter
-    private String description;
+    private String message;
 
 }
