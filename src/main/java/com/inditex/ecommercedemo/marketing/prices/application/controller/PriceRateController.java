@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/prices")
 public class PriceRateController {
@@ -32,8 +34,8 @@ public class PriceRateController {
     @GetMapping("/rates")
     public ResponseEntity<PriceDto> searchPriceRate(@Valid PriceCriteriaDto priceCriteriaDto) {
         Criteria criteria = priceCriteriaDtoMapper.toDomain(priceCriteriaDto);
-        Price price = priceRateSearcher.search(criteria);
-        PriceDto priceDto = this.priceDtoMapper.toDto(price);
-        return ResponseEntity.ok(this.priceDtoMapper.toDto(price));
+        Optional<Price> priceOpt = priceRateSearcher.search(criteria);
+        return priceOpt.map(price -> ResponseEntity.ok(this.priceDtoMapper.toDto(price)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

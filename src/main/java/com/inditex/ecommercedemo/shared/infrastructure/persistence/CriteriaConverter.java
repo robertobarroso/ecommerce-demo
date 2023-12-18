@@ -38,7 +38,7 @@ public final class CriteriaConverter<T> {
         CriteriaQuery<T> hibernateCriteria = builder.createQuery(aggregateClass);
         Root<T> root = hibernateCriteria.from(aggregateClass);
 
-        hibernateCriteria.where(formatPredicates(criteria.filters().filters(), root));
+        hibernateCriteria.where(formatPredicates(criteria.filterWrapper().filters(), root));
 
         if (criteria.order().hasOrder()) {
             Path<Object> orderBy = root.get(criteria.order().orderBy().value());

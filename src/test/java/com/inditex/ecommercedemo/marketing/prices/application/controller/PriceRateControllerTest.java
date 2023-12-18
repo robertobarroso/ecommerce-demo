@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +48,7 @@ public class PriceRateControllerTest {
     public void testIsOkResponse_whenRequiredParametersAreInformed() throws Exception {
         // Prepare data mocked from database
         Price price = PriceObjectMother.dummy();
-        when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenReturn(price);
+        when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenReturn(Optional.of(price));
 
         // Call method under test
         mockMvc.perform(MockMvcRequestBuilders
@@ -62,6 +64,20 @@ public class PriceRateControllerTest {
               .andExpect(MockMvcResultMatchers.jsonPath("$.endDate").isNotEmpty())
               .andExpect(MockMvcResultMatchers.jsonPath("$.value").isNotEmpty())
               .andExpect(MockMvcResultMatchers.jsonPath("$.currency").isNotEmpty());
+    }
+
+    @Test
+    public void testIsNotFoundResponse_whenQueryParametersDontMatch() throws Exception {
+        // Prepare data mocked from database
+        when(priceRateSearcher.search(ArgumentMatchers.any(Criteria.class))).thenReturn(Optional.empty());
+
+        // Call method under test
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/prices/rates")
+                        .params(PriceQueryParamsMother.dummy())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
