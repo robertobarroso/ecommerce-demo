@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CriteriaObjectMother {
 
-    public static Criteria dummy() {
+    public static Criteria ofPrice() {
         List<Filter> filters = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
         filters.add(Filter.create("startDate", FilterOperator.LTE.value(), now));

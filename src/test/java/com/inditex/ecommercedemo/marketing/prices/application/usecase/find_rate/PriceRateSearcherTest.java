@@ -33,7 +33,7 @@ public class PriceRateSearcherTest {
     @Test
     public void testGetPrice_whenAdapterReturnResults() {
         // Prepare data
-        Criteria criteria = CriteriaObjectMother.dummy();
+        Criteria criteria = CriteriaObjectMother.ofPrice();
         List<Price> pricesDb = PriceObjectMother.dummyList();
         when(pricePort.searchByCriteria(ArgumentMatchers.any(Criteria.class))).thenReturn(pricesDb);
 
@@ -46,9 +46,9 @@ public class PriceRateSearcherTest {
     }
 
     @Test
-    public void testGetEmptyhhPrice_whenAdapterReturnNoResults() {
+    public void testGetEmptyPrice_whenAdapterReturnNoResults() {
         // Prepare data
-        Criteria criteria = CriteriaObjectMother.dummy();
+        Criteria criteria = CriteriaObjectMother.ofPrice();
         when(pricePort.searchByCriteria(ArgumentMatchers.any(Criteria.class))).thenReturn(List.of());
 
         // Run method under test
@@ -61,7 +61,7 @@ public class PriceRateSearcherTest {
     @Test
     public void testGetError_whenASystemExceptionIsThrown() {
         // Prepare data
-        Criteria criteria = CriteriaObjectMother.dummy();
+        Criteria criteria = CriteriaObjectMother.ofPrice();
         when(pricePort.searchByCriteria(ArgumentMatchers.any(Criteria.class))).thenThrow(new DatabaseException("PriceRepository", null));
 
         // Run method under test
