@@ -1,6 +1,4 @@
-package com.inditex.ecommercedemo.marketing.prices.application.dto;
-
-import com.inditex.ecommercedemo.marketing.prices.domain.entity.Price;
+package com.inditex.ecommercedemo.marketing.prices.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

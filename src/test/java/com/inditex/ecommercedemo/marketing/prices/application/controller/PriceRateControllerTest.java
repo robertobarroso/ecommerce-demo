@@ -1,6 +1,6 @@
 package com.inditex.ecommercedemo.marketing.prices.application.controller;
 
-import com.inditex.ecommercedemo.marketing.prices.application.dto.PriceObjectMother;
+import com.inditex.ecommercedemo.marketing.prices.domain.entity.PriceObjectMother;
 import com.inditex.ecommercedemo.marketing.prices.application.dto.PriceQueryParamsMother;
 import com.inditex.ecommercedemo.marketing.prices.application.mapper.PriceCriteriaDtoMapper;
 import com.inditex.ecommercedemo.marketing.prices.application.mapper.PriceCriteriaDtoMapperImpl;
