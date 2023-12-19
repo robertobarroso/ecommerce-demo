@@ -37,7 +37,7 @@ Response
 ```
 ## Run
 This project require Java SDK 17 installed.
-Under the root directory of the project, execute:  
+Under the root directory, execute:  
 Unix
 ```unix
 mvnw spring-boot:run
