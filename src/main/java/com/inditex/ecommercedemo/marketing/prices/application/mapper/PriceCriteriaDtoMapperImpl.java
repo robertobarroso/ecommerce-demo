@@ -12,7 +12,7 @@ public class PriceCriteriaDtoMapperImpl implements PriceCriteriaDtoMapper {
 
     @Override
     public Criteria toDomain(PriceCriteriaDto priceCriteriaDto) {
-        List<Filter> filters = new ArrayList<>();
+        List<Filter<?>> filters = new ArrayList<>();
         filters.add(Filter.create("startDate", FilterOperator.LTE.value(), priceCriteriaDto.getDate()));
         filters.add(Filter.create("endDate", FilterOperator.GT.value(), priceCriteriaDto.getDate()));
         filters.add(Filter.create("productId", FilterOperator.EQUAL.value(), priceCriteriaDto.getProductId()));

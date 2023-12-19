@@ -9,7 +9,7 @@ import java.util.List;
 public class CriteriaObjectMother {
 
     public static Criteria ofPrice() {
-        List<Filter> filters = new ArrayList<>();
+        List<Filter<?>> filters = new ArrayList<>();
         LocalDateTime date = LocalDateTime.parse("2020-06-14T16:00:00");
         filters.add(Filter.create("startDate", FilterOperator.LTE.value(), date));
         filters.add(Filter.create("endDate", FilterOperator.GT.value(), date));

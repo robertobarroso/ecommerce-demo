@@ -11,12 +11,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public final class CriteriaConverter<T> {
 
-    private final HashMap<FilterOperator, TriFunction<Filter, Root<T>, CriteriaBuilder, Predicate>> predicateTransformers =
+    private final HashMap<FilterOperator, TriFunction<Filter<?>, Root<T>, CriteriaBuilder, Predicate>> predicateTransformers =
             new HashMap<>() {{
         put(FilterOperator.EQUAL, CriteriaConverter.this::equalsPredicateTransformer);
         put(FilterOperator.NOT_EQUAL, CriteriaConverter.this::notEqualsPredicateTransformer);
@@ -41,50 +40,50 @@ public final class CriteriaConverter<T> {
         };
     }
 
-    private Predicate[] formatPredicates(List<Filter> filters, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate[] formatPredicates(List<Filter<?>> filters, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return filters.stream().map(filter -> formatPredicate(filter, root, criteriaBuilder))
-                .collect(Collectors.toList()).toArray(new Predicate[0]);
+                .toList().toArray(new Predicate[0]);
     }
 
-    private Predicate formatPredicate(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        TriFunction<Filter, Root<T>, CriteriaBuilder, Predicate> transformer = predicateTransformers.get(filter.operator());
+    private Predicate formatPredicate(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+        TriFunction<Filter<?>, Root<T>, CriteriaBuilder, Predicate> transformer = predicateTransformers.get(filter.operator());
         return transformer.apply(filter, root, criteriaBuilder);
     }
 
-    private Predicate equalsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate equalsPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.equal(root.get(filter.field().value()), filter.value());
     }
 
-    private Predicate notEqualsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate notEqualsPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.notEqual(root.get(filter.field().value()), filter.value());
     }
 
-    private Predicate greaterThanPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate greaterThanPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.greaterThan(root.get(filter.field().value()),
                 filter.value() != null ? (LocalDateTime) filter.value() : null);
 
     }
 
-    private Predicate greaterThanOrEqualToPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate greaterThanOrEqualToPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.greaterThanOrEqualTo(root.get(filter.field().value()),
             filter.value() != null ? (LocalDateTime) filter.value() : null);
     }
 
-    private Predicate lessThanPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate lessThanPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.lessThan(root.get(filter.field().value()),
                 filter.value() != null ? (LocalDateTime) filter.value(): null);
     }
 
-    private Predicate lessThanOrEqualToPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate lessThanOrEqualToPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.lessThanOrEqualTo(root.get(filter.field().value()),
                 filter.value() != null ? (LocalDateTime) filter.value() : null);
     }
 
-    private Predicate containsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate containsPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.like(root.get(filter.field().value()), String.format("%%%s%%", filter.value()));
     }
 
-    private Predicate notContainsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
+    private Predicate notContainsPredicateTransformer(Filter<?> filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.notLike(root.get(filter.field().value()), String.format("%%%s%%", filter.value()));
     }
 }

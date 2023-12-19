@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public final class FilterWrapper {
-    private final List<Filter> filters;
+    private final List<Filter<?>> filters;
 
-    public FilterWrapper(List<Filter> filters) {
+    public FilterWrapper(List<Filter<?>> filters) {
         this.filters = filters;
     }
 
@@ -15,7 +15,7 @@ public final class FilterWrapper {
         return new FilterWrapper(Collections.emptyList());
     }
 
-    public List<Filter> filters() {
+    public List<Filter<?>> filters() {
         return filters;
     }
 
