@@ -16,7 +16,7 @@ And those criteria
 - productId: 35455
 - brandId: 1
 
-The endpoint will retrieve the price with RATE_ID 1.
+The endpoint will retrieve the price with RATE_ID 1 (first row).
 
 ## Endpoint
 ```json
