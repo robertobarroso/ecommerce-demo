@@ -46,7 +46,10 @@ Windows
 ```unix
 mvnw.cmd spring-boot:run
 ```
-
+## Run from Docker
+```unix
+docker run -p8080:8080 ghcr.io/robertobarroso/ecommerce-demo:latest
+```
 ## Run integration tests
 Execute
 ```unix
