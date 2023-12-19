@@ -4,14 +4,12 @@ import com.inditex.ecommercedemo.marketing.shared.domain.entity.BrandId;
 import com.inditex.ecommercedemo.marketing.shared.domain.entity.PriceId;
 import com.inditex.ecommercedemo.marketing.shared.domain.entity.PriceRateId;
 import com.inditex.ecommercedemo.marketing.shared.domain.entity.ProductId;
-import com.inditex.ecommercedemo.shared.domain.AggregateRoot;
 import com.inditex.ecommercedemo.marketing.shared.domain.event.PriceCreatedDomainEvent;
-import lombok.Builder;
+import com.inditex.ecommercedemo.shared.domain.AggregateRoot;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Builder
 public final class Price extends AggregateRoot {
 	private final PriceId id;
 	private final ProductId productId;
@@ -33,6 +31,7 @@ public final class Price extends AggregateRoot {
 		this.value = value;
 	}
 
+	// This method is not used yet. It should be used in the "Price Creation" use case.
     public static Price create(PriceId id, ProductId productId, BrandId brandId, PriceRateId priceRateId, Priority priority, PriceDateRange dateRange, PriceValue priceValue) {
         Price price = new Price(id, productId, brandId, priceRateId, priority, dateRange, priceValue);
         price.record(new PriceCreatedDomainEvent(id.value().toString(), productId.value(), brandId.value(), priceRateId.value(), priority.value(), dateRange.getStartDate().toString(), dateRange.getEndDate().toString(), priceValue.value().toString()));
