@@ -1,9 +1,8 @@
 package com.inditex.ecommercedemo.shared.domain.event;
 
-import com.inditex.ecommercedemo.shared.domain.Utils;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -14,8 +13,8 @@ public abstract class DomainEvent {
 
     public DomainEvent(String aggregateId) {
         this.aggregateId = aggregateId;
-        this.eventId     = UUID.randomUUID().toString();
-        this.occurredOn  = Utils.dateToString(LocalDateTime.now());
+        this.eventId = UUID.randomUUID().toString();
+        this.occurredOn  = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public DomainEvent(String aggregateId, String eventId, String occurredOn) {

@@ -7,7 +7,7 @@ import lombok.Getter;
 public enum BusinessErrorCode {
     BE0001("BE0001", "Request parameters are invalid"),
     BE0002("BE0002", "Request body is invalid"),
-    BE0003("BE0003", "Path variable is missing");
+    BE0003("BE0003", "Path variable is missed");
 
     @Getter
     private String code;

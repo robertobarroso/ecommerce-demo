@@ -7,7 +7,6 @@ import com.inditex.ecommercedemo.marketing.prices.infrastructure.repository.Pric
 import com.inditex.ecommercedemo.shared.domain.criteria.Criteria;
 import com.inditex.ecommercedemo.shared.domain.exception.DatabaseException;
 import com.inditex.ecommercedemo.shared.infrastructure.persistence.CriteriaConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ public class PriceAdapter implements PricePort {
 
     private PriceRepository priceRepository;
 
-    @Autowired
     private CriteriaConverter<PriceEntity> criteriaConverter;
 
     public PriceAdapter(PriceRepository priceRepository, CriteriaConverter criteriaConverter) {
