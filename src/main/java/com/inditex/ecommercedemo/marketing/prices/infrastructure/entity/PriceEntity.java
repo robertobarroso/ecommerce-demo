@@ -3,7 +3,6 @@ package com.inditex.ecommercedemo.marketing.prices.infrastructure.entity;
 import com.inditex.ecommercedemo.marketing.prices.domain.entity.Price;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

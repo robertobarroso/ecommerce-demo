@@ -22,6 +22,8 @@ public enum FilterOperator {
             case "!=": return FilterOperator.NOT_EQUAL;
             case ">": return FilterOperator.GT;
             case "<": return FilterOperator.LT;
+            case ">=": return FilterOperator.GTE;
+            case "<=": return FilterOperator.LTE;
             case "CONTAINS": return FilterOperator.CONTAINS;
             case "NOT_CONTAINS": return FilterOperator.NOT_CONTAINS;
             default: return null;

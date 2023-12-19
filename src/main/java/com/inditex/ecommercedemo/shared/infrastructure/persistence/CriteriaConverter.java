@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public final class CriteriaConverter<T> {
 
     private final HashMap<FilterOperator, TriFunction<Filter, Root<T>, CriteriaBuilder, Predicate>> predicateTransformers =
-            new HashMap<FilterOperator, TriFunction<Filter, Root<T>, CriteriaBuilder, Predicate>>() {{
+            new HashMap<>() {{
         put(FilterOperator.EQUAL, CriteriaConverter.this::equalsPredicateTransformer);
         put(FilterOperator.NOT_EQUAL, CriteriaConverter.this::notEqualsPredicateTransformer);
         put(FilterOperator.GT, CriteriaConverter.this::greaterThanPredicateTransformer);
@@ -27,11 +28,6 @@ public final class CriteriaConverter<T> {
         put(FilterOperator.NOT_CONTAINS, CriteriaConverter.this::notContainsPredicateTransformer);
     }};
     
-    private final HashMap<String, String> databaseFieldMap = new HashMap<String, String>() {{
-        put("brandId", "brandId");
-        put("productId", "productId");
-	}};
-
     public Specification<T> convert(Criteria criteria) {
          return (Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) -> {
             cq.where(formatPredicates(criteria.filterWrapper().filters(), root, cb));
@@ -56,40 +52,39 @@ public final class CriteriaConverter<T> {
     }
 
     private Predicate equalsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(root.get(databaseFieldMap.get(filter.field().value())), filter.value());
+        return criteriaBuilder.equal(root.get(filter.field().value()), filter.value());
     }
 
     private Predicate notEqualsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.notEqual(root.get(databaseFieldMap.get(filter.field().value())), filter.value());
+        return criteriaBuilder.notEqual(root.get(filter.field().value()), filter.value());
     }
 
     private Predicate greaterThanPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThan(root.get(databaseFieldMap.get(filter.field().value())),
-                filter.value() != null ? filter.value().toString(): null);
+        return criteriaBuilder.greaterThan(root.get(filter.field().value()),
+                filter.value() != null ? (LocalDateTime) filter.value() : null);
+
     }
 
     private Predicate greaterThanOrEqualToPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThanOrEqualTo(root.get(databaseFieldMap.get(filter.field().value())),
-                filter.value() != null ? filter.value().toString(): null);
+        return criteriaBuilder.greaterThanOrEqualTo(root.get(filter.field().value()),
+            filter.value() != null ? (LocalDateTime) filter.value() : null);
     }
 
     private Predicate lessThanPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThan(root.get(databaseFieldMap.get(filter.field().value())),
-                filter.value() != null ? filter.value().toString(): null);
+        return criteriaBuilder.lessThan(root.get(filter.field().value()),
+                filter.value() != null ? (LocalDateTime) filter.value(): null);
     }
 
     private Predicate lessThanOrEqualToPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThanOrEqualTo(root.get(databaseFieldMap.get(filter.field().value())),
-                filter.value() != null ? filter.value().toString(): null);
+        return criteriaBuilder.lessThanOrEqualTo(root.get(filter.field().value()),
+                filter.value() != null ? (LocalDateTime) filter.value() : null);
     }
 
     private Predicate containsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get(databaseFieldMap.get(filter.field().value())),
-                String.format("%%%s%%", filter.value()));
+        return criteriaBuilder.like(root.get(filter.field().value()), String.format("%%%s%%", filter.value()));
     }
 
     private Predicate notContainsPredicateTransformer(Filter filter, Root<T> root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.notLike(root.get(databaseFieldMap.get(filter.field().value())),
-                String.format("%%%s%%", filter.value()));
+        return criteriaBuilder.notLike(root.get(filter.field().value()), String.format("%%%s%%", filter.value()));
     }
 }

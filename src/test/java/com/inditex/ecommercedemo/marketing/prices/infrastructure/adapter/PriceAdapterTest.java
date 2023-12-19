@@ -63,6 +63,7 @@ public class PriceAdapterTest {
         when(priceRepository.findAll(ArgumentMatchers.any(Specification.class)))
                 .thenThrow(new InvalidDataAccessResourceUsageException("bad SQL description"));
 
+        // Run method under test
         Assertions.assertThrows(DatabaseException.class, () -> this.pricePort.searchByCriteria(criteria));
     }
 }

@@ -17,6 +17,6 @@ public class PriceCriteriaDtoMapperImpl implements PriceCriteriaDtoMapper {
         filters.add(Filter.create("endDate", FilterOperator.GT.value(), priceCriteriaDto.getDate()));
         filters.add(Filter.create("productId", FilterOperator.EQUAL.value(), priceCriteriaDto.getProductId()));
         filters.add(Filter.create("brandId", FilterOperator.EQUAL.value(), priceCriteriaDto.getBrandId()));
-        return new Criteria(new FilterWrapper(filters), Order.none());
+        return new Criteria(new FilterWrapper(filters), Order.desc("priority"));
     }
 }

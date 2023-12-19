@@ -10,9 +10,9 @@ public class CriteriaObjectMother {
 
     public static Criteria ofPrice() {
         List<Filter> filters = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-        filters.add(Filter.create("startDate", FilterOperator.LTE.value(), now));
-        filters.add(Filter.create("endDate", FilterOperator.GT.value(), now));
+        LocalDateTime date = LocalDateTime.parse("2020-06-14T16:00:00");
+        filters.add(Filter.create("startDate", FilterOperator.LTE.value(), date));
+        filters.add(Filter.create("endDate", FilterOperator.GT.value(), date));
         filters.add(Filter.create("productId", FilterOperator.EQUAL.value(), "35455"));
         filters.add(Filter.create("brandId", FilterOperator.EQUAL.value(), "1"));
         return new Criteria(new FilterWrapper(filters), Order.desc("priority"));

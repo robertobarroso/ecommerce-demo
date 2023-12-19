@@ -1,31 +1,21 @@
 package com.inditex.ecommercedemo.shared.domain.criteria;
 
-import java.util.HashMap;
-
-public final class Filter {
-    private final FilterField    field;
+public final class Filter<T> {
+    private final FilterField field;
     private final FilterOperator operator;
-    private final Object    value;
+    private final T value;
 
-    public Filter(FilterField field, FilterOperator operator, Object value) {
+    public Filter(FilterField field, FilterOperator operator, T value) {
         this.field    = field;
         this.operator = operator;
         this.value    = value;
     }
 
-    public static Filter create(String field, String operator, Object value) {
+    public static <T> Filter create(String field, String operator, T value) {
         return new Filter(
             new FilterField(field),
             FilterOperator.fromValue(operator.toUpperCase()),
             value
-        );
-    }
-
-    public static Filter create(HashMap<String, String> values) {
-        return new Filter(
-            new FilterField(values.get("field")),
-            FilterOperator.fromValue(values.get("operator")),
-            values.get("value")
         );
     }
 
@@ -37,13 +27,11 @@ public final class Filter {
         return operator;
     }
 
-    public Object value() {
+    public T value() {
         return value;
     }
 
     public String serialize() {
         return String.format("%s.%s.%s", field.value(), operator.value(), value);
     }
-
-
 }
